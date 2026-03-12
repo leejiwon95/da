@@ -3,429 +3,437 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>블럭토커 자사몰 와이어프레임 v2.1</title>
+<title>블럭토커 자사몰 와이어프레임 v3.0</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Courier New', monospace; background: #f0ede8; color: #3B3F45; }
 
-  .page-title { text-align: center; padding: 32px 24px 16px; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: #888; }
+  /* ── 페이지 타이틀 ── */
+  .page-title { text-align: center; padding: 32px 24px 8px; }
   .page-title h1 { font-size: 18px; font-weight: bold; color: #3B3F45; margin-bottom: 6px; letter-spacing: 0.05em; }
-  .page-title .version-badge { display: inline-block; background: #E07A5F; color: white; font-size: 10px; padding: 2px 10px; border-radius: 10px; letter-spacing: 0.08em; margin-left: 8px; vertical-align: middle; }
+  .version-badge { display: inline-block; background: #E07A5F; color: white; font-size: 10px; padding: 2px 10px; border-radius: 10px; letter-spacing: 0.08em; margin-left: 8px; vertical-align: middle; }
+  .page-subtitle { font-size: 11px; color: #aaa; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .change-log { font-size: 10px; color: #5E6F55; letter-spacing: 0.07em; margin-bottom: 32px; line-height: 1.8; }
 
+  /* ── 섹션 공통 ── */
   .section-wrapper { max-width: 900px; margin: 0 auto 48px auto; padding: 0 24px; }
-  .section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .section-num { background: #3B3F45; color: #f0ede8; font-size: 10px; font-weight: bold; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 2px; }
+  .section-label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .section-num { background: #3B3F45; color: #f0ede8; font-size: 10px; font-weight: bold; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+  .section-num.changed { background: #E07A5F; }
   .section-num.new { background: #5E6F55; }
-  .section-name { font-size: 12px; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: #3B3F45; }
-  .layout-tag { margin-left: auto; font-size: 10px; color: #aaa; letter-spacing: 0.08em; border: 1px solid #ccc; padding: 2px 7px; border-radius: 10px; }
-  .new-badge { font-size: 9px; background: #5E6F55; color: white; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.08em; }
-  .moved-badge { font-size: 9px; background: #aaa; color: white; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.08em; }
+  .section-name { font-size: 12px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #3B3F45; }
+  .layout-tag { margin-left: auto; font-size: 10px; color: #aaa; letter-spacing: 0.07em; border: 1px solid #ccc; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .badge { font-size: 9px; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.07em; white-space: nowrap; }
+  .badge.new { background: #5E6F55; color: white; }
+  .badge.changed { background: #E07A5F; color: white; }
+  .badge.moved { background: #aaa; color: white; }
+  .badge.cta { background: transparent; color: #E07A5F; border: 1px solid #E07A5F; }
 
   .frame { border: 1.5px dashed #b0a898; background: #faf8f5; position: relative; overflow: hidden; }
+  .section-note { font-size: 10px; color: #aaa; letter-spacing: 0.06em; margin-top: 7px; padding-left: 2px; line-height: 1.6; }
+  .section-note a { color: #5E6F55; }
+
+  /* ── 메시지 박스 ── */
+  .msg-box { background: #f0ede8; border: 1px solid #ddd8cf; border-radius: 4px; padding: 12px 16px; margin-bottom: 10px; }
+  .msg-label { font-size: 8px; letter-spacing: 0.12em; color: #E07A5F; text-transform: uppercase; margin-bottom: 5px; }
+  .msg-text { font-size: 11px; color: #3B3F45; line-height: 1.5; font-weight: bold; }
+  .msg-sub { font-size: 10px; color: #888; line-height: 1.5; margin-top: 3px; }
 
   /* ── 공통 와이어 요소 ── */
   .wire-h1 { height: 18px; background: #3B3F45; border-radius: 2px; width: 75%; opacity: 0.7; }
+  .wire-h1-light { height: 18px; background: rgba(255,255,255,0.7); border-radius: 2px; width: 75%; }
   .wire-sub { height: 10px; background: #ccc; border-radius: 2px; }
-  .wire-cta { height: 30px; background: #E07A5F; border-radius: 3px; width: 120px; opacity: 0.75; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; letter-spacing: 0.1em; margin-top: 4px; }
+  .wire-sub-light { height: 10px; background: rgba(255,255,255,0.4); border-radius: 2px; }
   .wire-line { height: 10px; background: #ddd; border-radius: 2px; }
   .wire-line.short { width: 60%; }
   .wire-line.xshort { width: 40%; }
+  .wire-cta { height: 32px; background: #E07A5F; border-radius: 3px; opacity: 0.85; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; color: white; letter-spacing: 0.1em; padding: 0 18px; }
   .wire-text-group { display: flex; flex-direction: column; gap: 7px; }
-  .divider { width: 100%; height: 1px; background: #e0dbd1; margin: 4px 0; }
-  .section-note { font-size: 10px; color: #aaa; letter-spacing: 0.07em; margin-top: 6px; padding-left: 2px; }
-  .cta-indicator { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; color: #E07A5F; letter-spacing: 0.08em; border: 1px solid #E07A5F; padding: 2px 7px; border-radius: 10px; margin-left: 8px; }
+  .divider { width: 100%; height: 1px; background: #e0dbd1; margin: 8px 0; }
 
-  /* ── S1 히어로 ── */
-  .s1-grid { display: grid; grid-template-columns: 1fr 1fr; height: 280px; }
-  .img-box { background: #ddd8cf; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; font-size: 10px; color: #888; letter-spacing: 0.08em; border: 1px solid #c9c3b8; position: relative; }
-  .text-box { background: #faf8f5; display: flex; flex-direction: column; justify-content: center; padding: 28px 24px; gap: 12px; }
+  /* ── S1 히어로 50:50 ── */
+  .s1-grid { display: grid; grid-template-columns: 1fr 1fr; height: 300px; }
+  .img-box { background: #ddd8cf; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; font-size: 10px; color: #888; letter-spacing: 0.08em; border-right: 1px solid #c9c3b8; }
+  .text-box { display: flex; flex-direction: column; justify-content: center; padding: 32px 28px; gap: 14px; background: #faf8f5; }
 
-  /* ── S2 공감 진입 ── */
-  .s2-full { height: 220px; background: #c9c3b8; display: flex; align-items: flex-start; padding: 28px; flex-direction: column; justify-content: flex-end; position: relative; }
+  /* ── S2 풀블리드 공감 ── */
+  .s2-full { height: 240px; background: #b8b0a5; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; }
 
-  /* ── S3 제품 정의 ── */
-  .s3-full { height: 240px; background: #e0dbd1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
+  /* ── S3 풀블리드 제품 ── */
+  .s3-full { height: 260px; background: #d4cfc8; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
 
-  /* ── S4 Aha Moment ── */
-  .s4-dark { height: 240px; background: #3B3F45; display: flex; align-items: center; padding: 32px; gap: 32px; }
-  .s4-text-area { flex: 1; display: flex; flex-direction: column; gap: 14px; }
-  .typing-bar { height: 22px; background: #E07A5F; border-radius: 2px; width: 80%; opacity: 0.85; position: relative; }
-  .typing-bar::after { content: '|'; position: absolute; right: -8px; top: 0; color: #E07A5F; font-size: 18px; animation: blink 1s infinite; }
+  /* ── S4 다크 타이핑 ── */
+  .s4-dark { height: 260px; background: #3B3F45; display: flex; align-items: center; padding: 36px; gap: 36px; }
+  .s4-text { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .typing-bar { height: 24px; background: #E07A5F; border-radius: 2px; width: 85%; opacity: 0.9; position: relative; }
+  .typing-bar::after { content: '|'; position: absolute; right: -10px; top: 1px; color: #E07A5F; font-size: 18px; animation: blink 1s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-  .bubble { border-radius: 12px; height: 28px; display: flex; align-items: center; padding: 0 12px; font-size: 10px; letter-spacing: 0.06em; width: fit-content; }
-  .bubble.left { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
-  .bubble.right { background: #E07A5F; color: white; opacity: 0.8; align-self: flex-end; margin-left: auto; width: 55%; }
-  .s4-img-area { width: 140px; height: 160px; background: rgba(255,255,255,0.07); border: 1px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; color: rgba(255,255,255,0.35); font-size: 10px; border-radius: 4px; }
+  .bubble { border-radius: 12px; min-height: 28px; display: flex; align-items: center; padding: 6px 14px; font-size: 10px; letter-spacing: 0.06em; width: fit-content; line-height: 1.4; }
+  .bubble.left { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.55); }
+  .bubble.right { background: #E07A5F; color: white; opacity: 0.8; margin-left: auto; width: 58%; }
+  .s4-img { width: 150px; height: 170px; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; color: rgba(255,255,255,0.3); font-size: 10px; border-radius: 4px; flex-shrink: 0; }
 
-  /* ── S5 경험 루프 ── */
-  .s5-scroll { height: 200px; display: flex; flex-direction: column; padding: 20px; gap: 14px; }
-  .s5-cards { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
-  .step-card { min-width: 130px; height: 95px; background: #e8e3db; border: 1px solid #ccc; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; font-size: 9px; color: #888; letter-spacing: 0.07em; }
-  .step-num { font-size: 10px; font-weight: bold; color: #E07A5F; }
-  .step-icon { font-size: 18px; opacity: 0.5; }
-  .arrow-hint { display: flex; align-items: center; gap: 4px; font-size: 9px; color: #aaa; letter-spacing: 0.08em; margin-top: 2px; }
+  /* ── S5 아이의 하루 — 3열 장면 카드 ── */
+  .s5-wrap { padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+  .scene-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .scene-card { background: #f0ede8; border: 1px solid #d4cfc8; border-radius: 6px; padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+  .scene-char { width: 40px; height: 40px; border-radius: 50%; background: #ddd8cf; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .scene-quote { font-size: 9px; color: #5E6F55; letter-spacing: 0.06em; font-style: italic; border-left: 2px solid #5E6F55; padding-left: 8px; line-height: 1.5; }
+  .scene-tag { font-size: 8px; color: #aaa; letter-spacing: 0.08em; }
 
-  /* ── S6 부모 설득 ── */
-  .s6-grid { display: grid; grid-template-columns: 1fr 1fr; height: 240px; }
-  .app-mockup { background: #ddd8cf; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px; }
-  .phone-frame { width: 70px; height: 110px; border: 2px solid #aaa; border-radius: 10px; background: #f5f5f5; display: flex; flex-direction: column; gap: 5px; padding: 8px 6px; align-items: center; }
-  .phone-row { height: 8px; background: #ccc; border-radius: 2px; width: 85%; }
-  .phone-row.accent { background: #E07A5F; opacity: 0.6; width: 60%; }
+  /* ── S6 아이가 고릅니다 — 50:50 ── */
+  .s6-grid { display: grid; grid-template-columns: 1fr 1fr; height: 260px; }
+  .char-select { background: #e8e3db; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; }
+  .char-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .char-chip { width: 36px; height: 36px; border-radius: 50%; background: #ddd8cf; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .char-chip.active { border-color: #E07A5F; background: #fff0ec; }
+  .select-label { font-size: 9px; color: #888; letter-spacing: 0.08em; }
+  .trust-chips { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .trust-chip { font-size: 9px; color: #5E6F55; letter-spacing: 0.07em; display: flex; align-items: center; gap: 4px; }
 
-  /* ── S7 3중 필터 (신규) ── */
-  .s7-safety { padding: 36px 32px; background: #f4f2ef; display: flex; flex-direction: column; gap: 28px; }
-  .s7-header { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
-  .shield-icon { font-size: 36px; opacity: 0.7; }
-  .filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .filter-card { background: #faf8f5; border: 1.5px solid #d4cfc8; border-radius: 6px; padding: 18px 14px; display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
-  .filter-card.highlight { border-color: #5E6F55; background: #f2f5f0; }
-  .filter-num { font-size: 10px; font-weight: bold; letter-spacing: 0.12em; color: #5E6F55; }
-  .filter-icon-box { width: 44px; height: 44px; border-radius: 50%; background: #e8e3db; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-  .filter-title-bar { height: 12px; background: #3B3F45; border-radius: 2px; width: 80%; opacity: 0.6; }
-  .filter-sub-bar { height: 8px; background: #ccc; border-radius: 2px; width: 90%; }
-  .filter-sub-bar2 { height: 8px; background: #ccc; border-radius: 2px; width: 70%; }
-  .filter-badge { font-size: 8px; background: #5E6F55; color: white; padding: 2px 8px; border-radius: 8px; letter-spacing: 0.08em; margin-top: 2px; }
-  .filter-connect { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 9px; color: #aaa; letter-spacing: 0.07em; }
-  .connect-arrow { font-size: 14px; color: #ccc; }
-  .safety-footer { display: flex; justify-content: center; gap: 24px; padding-top: 4px; }
-  .safety-chip { font-size: 9px; color: #888; border: 1px solid #ccc; padding: 4px 12px; border-radius: 12px; letter-spacing: 0.07em; background: white; }
+  /* ── S7 3중 안전 필터 ── */
+  .s7-wrap { padding: 32px; background: #f4f2ef; display: flex; flex-direction: column; gap: 24px; }
+  .s7-header { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .filter-card { background: #faf8f5; border: 1.5px solid #5E6F55; border-radius: 6px; padding: 18px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .filter-num { font-size: 9px; font-weight: bold; letter-spacing: 0.12em; color: #5E6F55; }
+  .filter-icon { width: 44px; height: 44px; border-radius: 50%; background: #e8e3db; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .filter-badge { font-size: 8px; background: #5E6F55; color: white; padding: 2px 8px; border-radius: 8px; letter-spacing: 0.07em; }
+  .filter-flow { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 9px; color: #aaa; letter-spacing: 0.08em; }
+  .safety-chips { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .safety-chip { font-size: 9px; color: #888; border: 1px solid #ccc; padding: 4px 12px; border-radius: 12px; background: white; }
 
-  /* ── S8 마퀴 ── */
-  .s8-marquee { padding: 20px 0; background: #faf8f5; overflow: hidden; }
-  .marquee-label { text-align: center; font-size: 10px; letter-spacing: 0.12em; color: #aaa; margin-bottom: 14px; text-transform: uppercase; }
-  .marquee-row { display: flex; gap: 0; margin-bottom: 10px; overflow: hidden; }
-  .marquee-track { display: flex; gap: 24px; animation: marquee-left 12s linear infinite; white-space: nowrap; }
-  .marquee-track.reverse { animation: marquee-right 12s linear infinite; }
-  @keyframes marquee-left { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-  @keyframes marquee-right { 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
+  /* ── S8 가격/구매 ── */
+  .s8-wrap { padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+  .product-img { height: 80px; background: #ddd8cf; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; letter-spacing: 0.08em; gap: 8px; }
+  .price-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .price-card { border: 1.5px solid #ccc; border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .price-card.pick { border-color: #E07A5F; background: #fff9f7; }
+  .price-tag { font-size: 20px; font-weight: bold; color: #3B3F45; }
+
+  /* ── S9 신뢰/마퀴 ── */
+  .s9-marquee { padding: 20px 0; background: #faf8f5; overflow: hidden; }
+  .marquee-label { text-align: center; font-size: 10px; letter-spacing: 0.12em; color: #aaa; margin-bottom: 14px; }
+  .marquee-row { overflow: hidden; margin-bottom: 10px; }
+  .marquee-track { display: flex; gap: 20px; animation: ml 14s linear infinite; white-space: nowrap; }
+  .marquee-track.rev { animation: mr 14s linear infinite; }
+  @keyframes ml { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  @keyframes mr { 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
   .logo-chip { height: 28px; padding: 0 16px; background: #e8e3db; border: 1px solid #ccc; border-radius: 14px; display: inline-flex; align-items: center; font-size: 9px; color: #888; letter-spacing: 0.06em; flex-shrink: 0; }
 
-  /* ── S9 가격/구매 ── */
-  .s9-frame { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-  .product-img-wide { height: 80px; background: #ddd8cf; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; letter-spacing: 0.08em; gap: 8px; }
-  .price-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .price-card { border: 1.5px solid #ccc; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: #faf8f5; }
-  .price-card.highlight { border-color: #E07A5F; background: #fff8f6; }
-  .price-tag { font-size: 18px; font-weight: bold; color: #3B3F45; }
-
   /* ── S10 후기 ── */
-  .s10-reviews { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
-  .review-cards { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
-  .review-card { min-width: 200px; background: #f0ede8; border: 1px solid #ccc; border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
-  .quote-mark { font-size: 22px; color: #E07A5F; opacity: 0.5; line-height: 1; }
+  .s10-wrap { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .review-cards { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 4px; }
+  .review-card { min-width: 210px; background: #f0ede8; border: 1px solid #ccc; border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+  .quote { font-size: 24px; color: #E07A5F; opacity: 0.45; line-height: 1; }
+  .review-tag { font-size: 8px; color: #5E6F55; letter-spacing: 0.08em; margin-top: 2px; }
 
   /* ── S11 최하단 CTA ── */
-  .s11-full { height: 200px; background: #c9c3b8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; position: relative; }
+  .s11-full { height: 210px; background: #c4bdb4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; position: relative; }
 </style>
 </head>
 <body>
 
+<!-- ── 페이지 헤더 ── -->
 <div class="page-title">
-  <h1>블럭토커 자사몰 — 메인페이지 와이어프레임 <span class="version-badge">v2.1</span></h1>
-  <span>WIREFRAME / LAYOUT SKETCH — 11 SECTIONS</span>
-  <div style="font-size:10px;color:#E07A5F;margin-top:6px;letter-spacing:0.08em;">▲ S7 신규 추가 (3중 필터 안전 섹션) · 기존 S7→S8 / S8→S9 / S9→S10 / S10→S11</div>
+  <h1>블럭토커 자사몰 — 메인페이지 와이어프레임 <span class="version-badge">v3.0</span></h1>
+  <div class="page-subtitle">WIREFRAME / LAYOUT SKETCH — 11 SECTIONS</div>
+  <div class="change-log">
+    ▲ v3.0 주요 변경 사항<br>
+    · 타깃 재정의: AI 시대를 준비시키고 싶은 부모<br>
+    · 차별점 확정: 블럭 물성(A) + 아이 눈높이 대화 설계(B) + 능동적 참여구조(C)<br>
+    · S5 전면 교체: 경험 루프 타임라인 → 3개 장면 카드 (아이의 하루)<br>
+    · S6 전면 교체: 앱 챗봇 제작 → 아이가 고릅니다 (캐릭터 선택 화면)<br>
+    · S7·S8 위치 조정: 안전 필터 → 가격 직전 / 마퀴 → 가격 직후<br>
+    · 전 섹션 메시지 교체 완료
+  </div>
 </div>
 
-<!-- ════════════════════════════════ S1 ════════════════════════════════ -->
+<!-- ════════ S1 히어로 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S1</span>
+    <span class="section-num changed">S1</span>
     <span class="section-name">히어로</span>
-    <span class="cta-indicator">✦ CTA</span>
+    <span class="badge cta">✦ CTA</span>
+    <span class="badge changed">메시지 교체</span>
     <span class="layout-tag">50 : 50 SPLIT</span>
   </div>
   <div class="frame">
     <div class="s1-grid">
       <div class="img-box">
-        <span style="font-size:22px;opacity:0.45">🧱</span>
-        <span style="font-size:10px;color:#888;letter-spacing:0.08em">PRODUCT SHOT</span>
-        <span style="font-size:9px;opacity:0.6;color:#888">BI 베이지 배경 + 제품 정면컷</span>
+        <span style="font-size:28px;opacity:0.4">🧱</span>
+        <span>PRODUCT SHOT</span>
+        <span style="font-size:9px;opacity:0.6">BI 베이지 배경 + 제품 정면컷</span>
       </div>
       <div class="text-box">
-        <div class="wire-h1"></div>
-        <div class="wire-text-group">
-          <div class="wire-sub" style="width:90%"></div>
-          <div class="wire-sub" style="width:70%"></div>
+        <div class="msg-box">
+          <div class="msg-label">핵심 메시지</div>
+          <div class="msg-text">아이가 스스로 생각하고,<br>스스로 말하는 시간</div>
+          <div class="msg-sub">아이가 직접 만들고, 스스로 생각하며 대화하는 AI 블럭친구</div>
         </div>
         <div class="divider"></div>
         <div class="wire-cta">지금 만나보기 →</div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 좌: 제품 연출컷 / 우: 헤드라인 + 서브 + CTA · 참고: miko.ai · 카티어스</div>
+  <div class="section-note">→ 좌: 제품 연출컷 (보유 컷 활용) / 우: 핵심+서브 메시지 + CTA · 참고: miko.ai · 카티어스</div>
 </div>
 
-<!-- ════════════════════════════════ S2 ════════════════════════════════ -->
+<!-- ════════ S2 공감 진입 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S2</span>
+    <span class="section-num changed">S2</span>
     <span class="section-name">공감 진입</span>
-    <span class="layout-tag">FULLBLEED IMAGE + TEXT OVERLAY</span>
+    <span class="badge changed">메시지 교체</span>
+    <span class="layout-tag">FULLBLEED + TEXT OVERLAY</span>
   </div>
   <div class="frame">
     <div class="s2-full">
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:rgba(0,0,0,0.2);letter-spacing:0.1em;text-align:center;">FULLBLEED IMAGE<br>아이 + 앱 + 블럭토커 연속 장면</div>
-      <div class="wire-text-group" style="position:relative;z-index:2">
-        <div class="wire-h1" style="background:#3B3F45;opacity:0.5;width:65%"></div>
-        <div class="wire-sub" style="background:rgba(0,0,0,0.2);width:80%"></div>
-        <div class="wire-sub" style="background:rgba(0,0,0,0.2);width:60%"></div>
+      <div style="position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:rgba(0,0,0,0.18);letter-spacing:0.1em;text-align:center;width:100%;">FULLBLEED IMAGE — AI 시대 아이와 부모 장면 / 감성적 연출</div>
+      <div class="wire-text-group" style="position:relative;z-index:2;max-width:60%">
+        <div class="msg-box" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3)">
+          <div class="msg-label" style="color:rgba(255,255,255,0.7)">핵심 메시지</div>
+          <div class="msg-text" style="color:white">우리 아이의 AI 첫걸음,<br>어떻게 시작해야 할까요?</div>
+          <div class="msg-sub" style="color:rgba(255,255,255,0.7)">외우는 것도, 따라 하는 것도 아닙니다.<br>직접 말을 걸고, 스스로 생각을 꺼내는 것에서 시작합니다</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 공감형 질문 오버레이 / 좌하단 텍스트 정렬 · 참고: lovevery.com · heycurio.com</div>
+  <div class="section-note">→ 타깃 부모 불안 공감 진입 / 좌하단 텍스트 정렬 · 참고: lovevery.com · heycurio.com</div>
 </div>
 
-<!-- ════════════════════════════════ S3 ════════════════════════════════ -->
+<!-- ════════ S3 제품 정의 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S3</span>
+    <span class="section-num changed">S3</span>
     <span class="section-name">제품 정의</span>
+    <span class="badge changed">서브 메시지 보강</span>
     <span class="layout-tag">FULLBLEED PRODUCT + CENTER TEXT</span>
   </div>
   <div class="frame">
     <div class="s3-full">
-      <span style="font-size:11px;color:#888;letter-spacing:0.08em;">FULLBLEED — 나무 책상 위 제품 단독 연출컷</span>
-      <div class="wire-text-group" style="align-items:center;width:50%">
-        <div class="wire-h1" style="width:100%"></div>
-        <div class="wire-sub" style="width:100%"></div>
-        <div class="wire-sub" style="width:80%"></div>
+      <span style="font-size:11px;color:#888;letter-spacing:0.08em;">FULLBLEED — 나무 책상 위 제품 단독 연출컷 (보유 컷 활용)</span>
+      <div class="msg-box" style="width:55%;text-align:center;background:rgba(250,248,245,0.92)">
+        <div class="msg-label">핵심 메시지</div>
+        <div class="msg-text">블럭토커는 AI 블럭친구입니다</div>
+        <div class="msg-sub">정답을 주는 게 아니라 아이의 다음 말을 끌어냅니다.<br>11개 캐릭터가 아이의 오늘에 맞는 대화를 시작합니다</div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 텍스트 중앙 하단 / 여백 충분 / 보유 컷 활용 · 참고: heycurio.com · 카티어스</div>
+  <div class="section-note">→ 텍스트 중앙 하단 / 여백 충분 · 참고: heycurio.com · 카티어스</div>
 </div>
 
-<!-- ════════════════════════════════ S4 ════════════════════════════════ -->
+<!-- ════════ S4 Aha Moment ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
     <span class="section-num">S4</span>
-    <span class="section-name">챗봇 대화 예시</span>
+    <span class="section-name">Aha Moment</span>
     <span class="layout-tag">DARK BG + TYPING ANIMATION</span>
   </div>
   <div class="frame">
     <div class="s4-dark">
-      <div class="s4-text-area">
-        <div style="font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;margin-bottom:4px;">TYPING ANIMATION ↓</div>
+      <div class="s4-text">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;">TYPING ANIMATION ↓</div>
         <div class="typing-bar"></div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+        <div class="msg-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);margin-top:4px">
+          <div class="msg-label">핵심 메시지 (타이핑 등장)</div>
+          <div class="msg-text" style="color:rgba(255,255,255,0.85)">"만약 공룡이 지금 살아있다면 어디 살까?"</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
           <div class="bubble left">블럭토커: "만약 공룡이 지금 살아있다면..."</div>
-          <div class="bubble right">아이: 응답 말풍선</div>
+          <div class="bubble right">아이: 궁금한 게 생겼어요!</div>
           <div class="bubble left">블럭토커: 이어지는 대화...</div>
         </div>
-        <div style="margin-top:12px;"><div class="wire-sub" style="background:rgba(255,255,255,0.25);width:55%"></div></div>
+        <div style="margin-top:8px">
+          <div class="wire-sub-light" style="width:50%"></div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.35);margin-top:5px;letter-spacing:0.07em;">서브: 아이가 먼저 말을 걸기 시작합니다</div>
+        </div>
       </div>
-      <div class="s4-img-area">
-        <span style="font-size:18px">👦</span>
-        <span>블럭토커 들고 있는 아이</span>
+      <div class="s4-img">
+        <span style="font-size:22px">👦</span>
+        <span>아이 표정</span>
+        <span style="font-size:9px;opacity:0.7">클로즈업 (AI생성)</span>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 다크 배경 / 타이핑 효과 / 말풍선 순차 등장 · 참고: kidco.ai</div>
+  <div class="section-note">→ B(대화 설계) + C(능동적 참여) 동시 전달 / 현재 섹션 중 차별점 전달력 최강 · 참고: kidco.ai</div>
 </div>
 
-<!-- ════════════════════════════════ S5 ════════════════════════════════ -->
+<!-- ════════ S5 아이의 하루 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S5</span>
-    <span class="section-name">핵심 경험 루프</span>
-    <span class="layout-tag">HORIZONTAL SCROLL TIMELINE</span>
+    <span class="section-num changed">S5</span>
+    <span class="section-name">아이의 하루</span>
+    <span class="badge changed">전면 교체</span>
+    <span class="layout-tag">3-COL SCENE CARD</span>
   </div>
   <div class="frame">
-    <div class="s5-scroll">
-      <div class="wire-text-group">
-        <div class="wire-h1" style="width:55%"></div>
-        <div class="wire-sub" style="width:40%"></div>
+    <div class="s5-wrap">
+      <div class="msg-box">
+        <div class="msg-label">핵심 메시지</div>
+        <div class="msg-text">매일 다른 친구와, 매일 다른 대화</div>
+        <div class="msg-sub">11개 캐릭터가 아이의 오늘에 맞는 대화를 시작합니다</div>
       </div>
-      <div class="s5-cards">
-        <div class="step-card"><span class="step-num">STEP 1</span><span class="step-icon">🧱</span><span>만들기</span></div>
-        <div class="step-card"><span class="step-num">STEP 2</span><span class="step-icon">💬</span><span>질문하기</span></div>
-        <div class="step-card"><span class="step-num">STEP 3</span><span class="step-icon">✨</span><span>상상하기</span></div>
-        <div class="step-card"><span class="step-num">STEP 4</span><span class="step-icon">🗣</span><span>말하기</span></div>
-        <div class="step-card" style="background:#ece7de;border-style:dashed"><span style="font-size:9px;color:#bbb">← 드래그</span></div>
+      <div class="scene-cards">
+        <div class="scene-card">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="scene-char">🦉</div>
+            <div style="font-size:9px;color:#888;letter-spacing:0.07em;">오나 — 생각 친구</div>
+          </div>
+          <div class="scene-quote">"오늘 가장 행복했던 순간이 뭐야?"</div>
+          <div class="scene-tag">→ 생각을 말로 꺼내는 시간</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;">
+            <div class="wire-line"></div>
+            <div class="wire-line short"></div>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="scene-char">🐦</div>
+            <div style="font-size:9px;color:#888;letter-spacing:0.07em;">블루 — 지식 친구</div>
+          </div>
+          <div class="scene-quote">"공룡은 왜 멸종했을까?"</div>
+          <div class="scene-tag">→ 궁금한 것을 파고드는 시간</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;">
+            <div class="wire-line"></div>
+            <div class="wire-line short"></div>
+          </div>
+        </div>
+        <div class="scene-card">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="scene-char">🐼</div>
+            <div style="font-size:9px;color:#888;letter-spacing:0.07em;">밤이 — 감정 친구</div>
+          </div>
+          <div class="scene-quote">"오늘 속상한 일 있었어?"</div>
+          <div class="scene-tag">→ 감정을 정리하는 시간</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px;">
+            <div class="wire-line"></div>
+            <div class="wire-line short"></div>
+          </div>
+        </div>
       </div>
-      <div class="arrow-hint">← 드래그하여 탐색 &nbsp;/&nbsp; 화살표 클릭 이동 →</div>
+      <div style="font-size:9px;color:#aaa;letter-spacing:0.07em;text-align:center;">+ 11개 캐릭터 전체 보기 → (링크 또는 펼치기)</div>
     </div>
   </div>
-  <div class="section-note">→ 4단계 드래그형 가로 타임라인 · 참고: miko.ai · lovevery.com</div>
+  <div class="section-note">→ B(대화 설계) 직접 전달 / 3개 대표 장면만 노출, 나머지는 캐릭터 페이지로 · 참고: miko.ai · lovevery.com<br>⚠️ 캐릭터 비주얼 확정 후 실제 이미지로 교체 예정 (현재 이모지 플레이스홀더)</div>
 </div>
 
-<!-- ════════════════════════════════ S6 ════════════════════════════════ -->
+<!-- ════════ S6 아이가 고릅니다 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S6</span>
-    <span class="section-name">챗봇 만들기</span>
-    <span class="layout-tag">50 : 50 SPLIT — APP + PRODUCT</span>
+    <span class="section-num changed">S6</span>
+    <span class="section-name">아이가 고릅니다</span>
+    <span class="badge changed">전면 교체</span>
+    <span class="layout-tag">50 : 50 SPLIT — CHAR SELECT + TEXT</span>
   </div>
   <div class="frame">
     <div class="s6-grid">
-      <div class="app-mockup">
-        <div class="phone-frame">
-          <div class="phone-row"></div>
-          <div class="phone-row accent"></div>
-          <div class="phone-row"></div>
-          <div class="phone-row accent"></div>
-          <div class="phone-row" style="width:50%"></div>
-          <div class="phone-row"></div>
-          <div class="phone-row accent" style="width:70%"></div>
+      <div class="char-select">
+        <div class="select-label">앱 — 캐릭터 선택 화면 목업</div>
+        <div class="char-grid">
+          <div class="char-chip">🦉</div>
+          <div class="char-chip active">🐦</div>
+          <div class="char-chip">🐼</div>
+          <div class="char-chip">🐌</div>
+          <div class="char-chip">🐊</div>
+          <div class="char-chip">🐧</div>
+          <div class="char-chip">🐶</div>
+          <div class="char-chip">🐉</div>
         </div>
-        <div style="font-size:9px;color:#888;letter-spacing:0.07em;margin-top:6px;">앱 챗봇 제작 화면 목업</div>
+        <div style="font-size:8px;color:#E07A5F;letter-spacing:0.07em;margin-top:4px;">선택됨: 블루 🐦</div>
       </div>
       <div class="text-box">
-        <div class="wire-h1"></div>
-        <div class="wire-text-group">
-          <div class="wire-sub" style="width:95%"></div>
-          <div class="wire-sub" style="width:85%"></div>
-          <div class="wire-sub" style="width:70%"></div>
+        <div class="msg-box">
+          <div class="msg-label">핵심 메시지</div>
+          <div class="msg-text">어떤 친구와 대화할지,<br>아이가 직접 고릅니다</div>
+          <div class="msg-sub">오늘 기분에 따라, 오늘 궁금한 것에 따라<br>대화의 주도권은 아이에게 있습니다</div>
         </div>
-        <div style="font-size:9px;color:#aaa;margin-top:4px;letter-spacing:0.07em;">부모 向 — 차분하고 근거 있는 톤</div>
+        <div class="trust-chips">
+          <div class="trust-chip">✓ 아이가 직접 대화 상대를 선택</div>
+          <div class="trust-chip">✓ 기분과 상황에 맞는 11가지 캐릭터</div>
+          <div class="trust-chip">✓ 매번 새로운 대화가 시작되는 구조</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 좌: 앱 목업 / 우: 핵심 메시지 · 참고: miko.ai · 아이캔톡AI</div>
+  <div class="section-note">→ C(능동적 참여) 직접 전달 / 좌: 캐릭터 선택 앱 화면 목업 / 우: 메시지 + 신뢰 칩 · 참고: miko.ai · 아이캔톡AI<br>⚠️ 앱 UI 확정 후 실제 화면 캡처로 교체 예정</div>
 </div>
 
-<!-- ════════════════════════════════ S7 신규 ════════════════════════════════ -->
+<!-- ════════ S7 3중 안전 필터 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num ">S7</span>
+    <span class="section-num new">S7</span>
     <span class="section-name">3중 안전 필터</span>
-    <span class="layout-tag">3-COL FILTER CARD + SHIELD ICON</span>
+    <span class="badge moved">구 S7 위치 유지</span>
+    <span class="layout-tag">3-COL FILTER CARD</span>
   </div>
   <div class="frame">
-    <div class="s7-safety">
-
-      <!-- 헤더 -->
+    <div class="s7-wrap">
       <div class="s7-header">
-        <div class="shield-icon">🛡</div>
-        <div class="wire-text-group" style="align-items:center;width:55%">
-          <div class="wire-h1" style="width:100%;margin:0 auto"></div>
-          <div class="wire-sub" style="width:80%;margin:0 auto"></div>
-          <div class="wire-sub" style="width:65%;margin:0 auto"></div>
-        </div>
-        <div style="font-size:9px;color:#5E6F55;letter-spacing:0.08em;margin-top:4px;">
-          욕설 및 유해언어 차단 — 3중 필터 시스템 적용
+        <div style="font-size:32px;opacity:0.65">🛡</div>
+        <div class="msg-box" style="width:60%;text-align:center">
+          <div class="msg-label">핵심 메시지</div>
+          <div class="msg-text">아이의 대화, 3중으로 지킵니다</div>
+          <div class="msg-sub">욕설과 유해언어가 아이에게 닿기 전에 — 블럭토커의 3단계 안전 설계</div>
         </div>
       </div>
-
-      <!-- 3단 필터 카드 -->
       <div class="filter-grid">
-
-        <!-- 필터 1 -->
-        <div class="filter-card highlight">
+        <div class="filter-card">
           <span class="filter-num">FILTER 01</span>
-          <div class="filter-icon-box">🇰🇷</div>
-          <div class="filter-title-bar"></div>
-          <div class="wire-text-group" style="width:100%;align-items:center">
-            <div class="filter-sub-bar"></div>
-            <div class="filter-sub-bar2"></div>
-          </div>
+          <div class="filter-icon">🇰🇷</div>
+          <div class="wire-line" style="width:80%"></div>
+          <div class="wire-line short"></div>
           <span class="filter-badge">KISO 유해언어 차단</span>
-          <div style="font-size:8px;color:#aaa;letter-spacing:0.06em;text-align:center;margin-top:2px;">한국인터넷자율정책기구 기준</div>
+          <div style="font-size:8px;color:#aaa;text-align:center;line-height:1.4;">한국인터넷자율정책기구<br>기준 적용</div>
         </div>
-
-        <!-- 연결 화살표 -->
-        <div style="display:contents">
-        </div>
-
-        <!-- 필터 2 -->
-        <div class="filter-card highlight">
+        <div class="filter-card">
           <span class="filter-num">FILTER 02</span>
-          <div class="filter-icon-box">🤖</div>
-          <div class="filter-title-bar"></div>
-          <div class="wire-text-group" style="width:100%;align-items:center">
-            <div class="filter-sub-bar"></div>
-            <div class="filter-sub-bar2"></div>
-          </div>
+          <div class="filter-icon">🤖</div>
+          <div class="wire-line" style="width:80%"></div>
+          <div class="wire-line short"></div>
           <span class="filter-badge">OpenAI 필터링</span>
-          <div style="font-size:8px;color:#aaa;letter-spacing:0.06em;text-align:center;margin-top:2px;">OpenAI Moderation API 적용</div>
+          <div style="font-size:8px;color:#aaa;text-align:center;line-height:1.4;">OpenAI Moderation API<br>실시간 적용</div>
         </div>
-
-        <!-- 필터 3 -->
-        <div class="filter-card highlight">
+        <div class="filter-card">
           <span class="filter-num">FILTER 03</span>
-          <div class="filter-icon-box">🔒</div>
-          <div class="filter-title-bar"></div>
-          <div class="wire-text-group" style="width:100%;align-items:center">
-            <div class="filter-sub-bar"></div>
-            <div class="filter-sub-bar2"></div>
-          </div>
-          <span class="filter-badge">최상위 유해언어 프롬프트</span>
-          <div style="font-size:8px;color:#aaa;letter-spacing:0.06em;text-align:center;margin-top:2px;">자체 설계 최상위 필터 프롬프트</div>
-        </div>
-
-      </div>
-
-      <!-- 화살표 연결선 (3단계 흐름 표현) -->
-      </div>
-
-    </div>
-  <div class="section-note">→ 3열 카드 구조 / 쉴드 아이콘 + 헤드라인 + 필터 단계별 카드 + 신뢰 칩 · 참고: <a href="https://miko.ai/pages/safety" style="color:#5E6F55">miko.ai/pages/safety</a></div>
-</div>
-
-<!-- ════════════════════════════════ S8  ════════════════════════════════ -->
-<div class="section-wrapper">
-  <div class="section-label">
-    <span class="section-num">S8</span>
-    <span class="section-name">신뢰/검증 — 파트너</span>
-    <span class="layout-tag">MARQUEE — FULL WIDTH · 2 ROWS</span>
-  </div>
-  <div class="frame">
-    <div class="s8-marquee">
-      <div class="marquee-label">함께한 기관 및 파트너</div>
-      <div class="marquee-row">
-        <div class="marquee-track">
-          <div class="logo-chip">기관 로고 A</div><div class="logo-chip">수상 배지 B</div><div class="logo-chip">기관 로고 C</div><div class="logo-chip">인증 마크 D</div><div class="logo-chip">기관 로고 E</div><div class="logo-chip">수상 배지 F</div><div class="logo-chip">기관 로고 G</div><div class="logo-chip">인증 마크 H</div>
-          <div class="logo-chip">기관 로고 A</div><div class="logo-chip">수상 배지 B</div><div class="logo-chip">기관 로고 C</div><div class="logo-chip">인증 마크 D</div><div class="logo-chip">기관 로고 E</div><div class="logo-chip">수상 배지 F</div><div class="logo-chip">기관 로고 G</div><div class="logo-chip">인증 마크 H</div>
+          <div class="filter-icon">🔒</div>
+          <div class="wire-line" style="width:80%"></div>
+          <div class="wire-line short"></div>
+          <span class="filter-badge">최상위 프롬프트 필터</span>
+          <div style="font-size:8px;color:#aaa;text-align:center;line-height:1.4;">자체 설계<br>선제 차단</div>
         </div>
       </div>
-      <div class="marquee-row">
-        <div class="marquee-track reverse">
-          <div class="logo-chip">인증 기관 I</div><div class="logo-chip">기관 로고 J</div><div class="logo-chip">수상 배지 K</div><div class="logo-chip">기관 로고 L</div><div class="logo-chip">인증 마크 M</div><div class="logo-chip">기관 로고 N</div><div class="logo-chip">수상 배지 O</div><div class="logo-chip">인증 기관 P</div>
-          <div class="logo-chip">인증 기관 I</div><div class="logo-chip">기관 로고 J</div><div class="logo-chip">수상 배지 K</div><div class="logo-chip">기관 로고 L</div><div class="logo-chip">인증 마크 M</div><div class="logo-chip">기관 로고 N</div><div class="logo-chip">수상 배지 O</div><div class="logo-chip">인증 기관 P</div>
-        </div>
+      <div class="filter-flow">
+        <div style="flex:1;height:1px;background:#d4cfc8"></div>
+        FILTER 01 → 02 → 03 순차 적용
+        <div style="flex:1;height:1px;background:#d4cfc8"></div>
+      </div>
+      <div class="safety-chips">
+        <div class="safety-chip">✓ 아이 안전 대화 설계</div>
+        <div class="safety-chip">✓ 유해 콘텐츠 실시간 차단</div>
+        <div class="safety-chip">✓ 기관 검증 대화 범위</div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 1열: 우→좌 / 2열: 좌→우 / 가로 100% / 로고 세부는 디자인사 위임 · 참고: miko.ai</div>
+  <div class="section-note">→ 구매 결정 직전 안전 불안 제거 역할 / S8 가격 직전 배치 (위치 의도적) · 참고: <a href="https://miko.ai/pages/safety">miko.ai/pages/safety</a></div>
 </div>
 
-
-<!-- ════════════════════════════════ S9 ════════════════════════════════ -->
+<!-- ════════ S8 가격/구매 ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
-    <span class="section-num">S9</span>
-    <span class="section-name">사용 후기</span>
-    <span class="layout-tag">CARD SLIDER — 3~5 CARDS</span>
-  </div>
-  <div class="frame">
-    <div class="s10-reviews">
-      <div class="wire-text-group">
-        <div class="wire-h1" style="width:50%"></div>
-      </div>
-      <div class="review-cards">
-        <div class="review-card"><div class="quote-mark">"</div><div class="wire-line"></div><div class="wire-line short"></div><div class="wire-line" style="width:75%"></div><div style="font-size:9px;color:#bbb;margin-top:4px;letter-spacing:0.07em;">— 부모 후기 예시</div></div>
-        <div class="review-card"><div class="quote-mark">"</div><div class="wire-line"></div><div class="wire-line" style="width:80%"></div><div class="wire-line short"></div><div style="font-size:9px;color:#bbb;margin-top:4px;letter-spacing:0.07em;">— 부모 후기 예시</div></div>
-        <div class="review-card"><div class="quote-mark">"</div><div class="wire-line" style="width:75%"></div><div class="wire-line"></div><div class="wire-line short"></div><div style="font-size:9px;color:#bbb;margin-top:4px;letter-spacing:0.07em;">— 부모 후기 예시</div></div>
-      </div>
-      <div class="arrow-hint">←  ⬅️방향으로 흐르는 형태/드래그가능하게 →</div>
-    </div>
-  </div>
-  <div class="section-note">→ 따옴표 인용형 카드 / 런칭 후 실제 후기로 교체 예정 · 참고: lovevery.com · 카티어스</div>
-</div>
-<!-- ════════════════════════════════ S10 ════════════════════════════════ -->
-<div class="section-wrapper">
-  <div class="section-label">
-    <span class="section-num">S10</span>
+    <span class="section-num changed">S8</span>
     <span class="section-name">가격/구매</span>
-    <span class="cta-indicator">✦ CTA</span>
+    <span class="badge cta">✦ CTA</span>
+    <span class="badge moved">구 S9 → S8</span>
     <span class="layout-tag">PRODUCT IMG + 2-COL PRICE CARD</span>
   </div>
   <div class="frame">
-    <div class="s9-frame">
-      <div class="product-img-wide"><span>📦</span><span>제품 패키지 풀샷 — 박스 + 제품 (화이트 배경)</span></div>
-      <div class="wire-text-group" style="align-items:center">
-        <div class="wire-h1" style="width:40%;margin:0 auto"></div>
-        <div class="wire-sub" style="width:30%;margin:0 auto"></div>
+    <div class="s8-wrap">
+      <div class="product-img"><span>📦</span><span>제품 패키지 풀샷 — 박스 + 블럭토커 (화이트 배경)</span></div>
+      <div class="msg-box" style="text-align:center">
+        <div class="msg-label">핵심 메시지</div>
+        <div class="msg-text">나만의 AI 블럭친구, 지금 시작하세요</div>
+        <div class="msg-sub">디바이스 구매 + 첫 구독 무료 혜택</div>
       </div>
       <div class="price-cards">
         <div class="price-card">
@@ -433,41 +441,149 @@
           <div class="price-tag">17~24만원</div>
           <div class="wire-line short" style="margin:4px 0"></div>
           <div class="wire-line xshort"></div>
-          <div class="wire-cta" style="margin-top:8px;width:100%">구매하기</div>
+          <div class="wire-cta" style="margin-top:10px;width:100%">구매하기</div>
         </div>
-        <div class="price-card highlight">
-          <div style="font-size:9px;color:#E07A5F;letter-spacing:0.08em;font-weight:bold;">디바이스 + 구독 ★추천</div>
+        <div class="price-card pick">
+          <div style="font-size:9px;color:#E07A5F;font-weight:bold;letter-spacing:0.08em;">디바이스 + 구독 ★추천</div>
           <div class="price-tag">+ 월 1만원 이하</div>
-          <div style="font-size:9px;color:#aaa;letter-spacing:0.06em;">첫 구독 1년 무료 혜택(기간한정)</div>
+          <div style="font-size:9px;color:#aaa;">첫 구독 무료 혜택</div>
           <div class="wire-line short" style="margin:4px 0"></div>
-          <div class="wire-cta" style="margin-top:8px;width:100%">시작하기</div>
+          <div class="wire-cta" style="margin-top:10px;width:100%">지금 구매하기</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="section-note">→ 2열 플랜 카드 / 우측 카드 강조 · 참고: kidco.ai · miko.ai</div>
+  <div class="section-note">→ S7 안전 필터 직후 배치 — 안심 → 구매 전환 흐름 · 참고: kidco.ai · miko.ai</div>
 </div>
-<!-- ════════════════════════════════ S11 ════════════════════════════════ -->
+
+<!-- ════════ S9 신뢰/검증 마퀴 ════════ -->
+<div class="section-wrapper">
+  <div class="section-label">
+    <span class="section-num changed">S9</span>
+    <span class="section-name">신뢰/검증</span>
+    <span class="badge moved">구 S8 → S9</span>
+    <span class="layout-tag">MARQUEE FULL WIDTH · 2 ROWS</span>
+  </div>
+  <div class="frame">
+    <div class="s9-marquee">
+      <div class="marquee-label">안전하게 설계된 대화 구조 — 함께한 기관 및 파트너</div>
+      <div class="marquee-row">
+        <div class="marquee-track">
+          <div class="logo-chip">기관 로고 A</div><div class="logo-chip">수상 배지 B</div><div class="logo-chip">기관 로고 C</div><div class="logo-chip">인증 마크 D</div><div class="logo-chip">기관 로고 E</div><div class="logo-chip">수상 배지 F</div><div class="logo-chip">기관 로고 G</div><div class="logo-chip">인증 마크 H</div>
+          <div class="logo-chip">기관 로고 A</div><div class="logo-chip">수상 배지 B</div><div class="logo-chip">기관 로고 C</div><div class="logo-chip">인증 마크 D</div><div class="logo-chip">기관 로고 E</div><div class="logo-chip">수상 배지 F</div><div class="logo-chip">기관 로고 G</div><div class="logo-chip">인증 마크 H</div>
+        </div>
+      </div>
+      <div class="marquee-row">
+        <div class="marquee-track rev">
+          <div class="logo-chip">인증 기관 I</div><div class="logo-chip">기관 로고 J</div><div class="logo-chip">수상 배지 K</div><div class="logo-chip">기관 로고 L</div><div class="logo-chip">인증 마크 M</div><div class="logo-chip">기관 로고 N</div><div class="logo-chip">수상 배지 O</div><div class="logo-chip">인증 기관 P</div>
+          <div class="logo-chip">인증 기관 I</div><div class="logo-chip">기관 로고 J</div><div class="logo-chip">수상 배지 K</div><div class="logo-chip">기관 로고 L</div><div class="logo-chip">인증 마크 M</div><div class="logo-chip">기관 로고 N</div><div class="logo-chip">수상 배지 O</div><div class="logo-chip">인증 기관 P</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-note">→ 가격 직후 배치 — "잘 산 건가" 의심 즉시 해소 역할 / 1열 우→좌 · 2열 좌→우 · 참고: miko.ai</div>
+</div>
+
+<!-- ════════ S10 사용 후기 ════════ -->
+<div class="section-wrapper">
+  <div class="section-label">
+    <span class="section-num changed">S10</span>
+    <span class="section-name">사용 후기</span>
+    <span class="badge changed">후기 방향 조정</span>
+    <span class="layout-tag">CARD SLIDER — 3~5 CARDS</span>
+  </div>
+  <div class="frame">
+    <div class="s10-wrap">
+      <div class="msg-box">
+        <div class="msg-label">핵심 메시지</div>
+        <div class="msg-text">아이가 먼저 말을 걸었어요</div>
+      </div>
+      <div class="review-cards">
+        <div class="review-card">
+          <div class="quote">"</div>
+          <div class="wire-line"></div>
+          <div class="wire-line short"></div>
+          <div class="wire-line" style="width:80%"></div>
+          <div class="review-tag">→ AI와 대화하는 아이를 보고 안심한 부모 후기</div>
+        </div>
+        <div class="review-card">
+          <div class="quote">"</div>
+          <div class="wire-line" style="width:85%"></div>
+          <div class="wire-line"></div>
+          <div class="wire-line short"></div>
+          <div class="review-tag">→ 아이가 스스로 대화를 시작한 경험 후기</div>
+        </div>
+        <div class="review-card">
+          <div class="quote">"</div>
+          <div class="wire-line short"></div>
+          <div class="wire-line"></div>
+          <div class="wire-line" style="width:75%"></div>
+          <div class="review-tag">→ AI 첫걸음으로 블럭토커를 선택한 이유</div>
+        </div>
+        <div class="review-card" style="border-style:dashed;background:transparent;align-items:center;justify-content:center;min-width:70px">
+          <span style="font-size:9px;color:#ccc">+ 더보기</span>
+        </div>
+      </div>
+      <div style="font-size:9px;color:#aaa;letter-spacing:0.07em;">← 화살표 클릭 or 드래그 →</div>
+    </div>
+  </div>
+  <div class="section-note">→ 타깃 부모 후기 방향 명시: AI 안심 / 자발적 대화 / AI 첫걸음 · 런칭 후 실제 후기로 교체 · 참고: lovevery.com · 카티어스</div>
+</div>
+
+<!-- ════════ S11 최하단 CTA ════════ -->
 <div class="section-wrapper">
   <div class="section-label">
     <span class="section-num">S11</span>
     <span class="section-name">최하단 CTA</span>
-    <span class="cta-indicator">✦ CTA</span>
+    <span class="badge cta">✦ CTA</span>
     <span class="layout-tag">FULLBLEED + CENTER CTA</span>
   </div>
   <div class="frame">
     <div class="s11-full">
-      <div style="position:absolute;font-size:10px;color:rgba(0,0,0,0.2);letter-spacing:0.1em;">FULLBLEED — 제품 + 아이 손 클로즈업 / BI 베이지 배경</div>
-      <div class="wire-text-group" style="align-items:center;position:relative;z-index:2">
-        <div class="wire-h1" style="background:#3B3F45;opacity:0.6;width:260px;margin:0 auto"></div>
-        <div class="wire-sub" style="width:180px;margin:0 auto"></div>
+      <div style="position:absolute;font-size:10px;color:rgba(0,0,0,0.18);letter-spacing:0.1em;">FULLBLEED — 제품 + 아이 손 클로즈업 / BI 베이지 배경 / 따뜻한 조명</div>
+      <div class="msg-box" style="position:relative;z-index:2;text-align:center;background:rgba(250,248,245,0.9)">
+        <div class="msg-label">핵심 메시지</div>
+        <div class="msg-text">아이의 첫 번째 AI 친구를 만들어주세요</div>
       </div>
-      <div class="wire-cta" style="position:relative;z-index:2;font-size:10px;width:140px;height:36px;">지금 시작하기</div>
+      <div class="wire-cta" style="position:relative;z-index:2;">구매하러 가기 →</div>
     </div>
   </div>
-  <div class="section-note">→ 따뜻한 조명 연출컷 / 중앙 정렬 / CTA 버튼 #E07A5F · 참고: heycurio.com · lovevery.com</div>
+  <div class="section-note">→ 중앙 정렬 / CTA 버튼 #E07A5F · 참고: heycurio.com · lovevery.com</div>
 </div>
 
+<!-- ════════ 범례 + 설득 흐름 ════════ -->
+<div style="max-width:900px;margin:0 auto 60px;padding:0 24px;">
+  <div style="border:1px solid #ddd;border-radius:6px;padding:24px;background:#faf8f5;">
+
+    <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;color:#3B3F45;margin-bottom:16px;text-transform:uppercase;">전체 설득 흐름 / Persuasion Flow</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:10px;color:#888;letter-spacing:0.06em;margin-bottom:20px;line-height:1.7;">
+      <span><b style="color:#3B3F45">S1</b> 감성 진입 — 아이가 스스로 생각하고 말하는 시간 (부모 감성 자극)</span>
+      <span><b style="color:#3B3F45">S2</b> 불안 공감 — AI 첫걸음 어떻게 시작? (타깃 부모 불안 건드리기)</span>
+      <span><b style="color:#3B3F45">S3</b> 해결책 제시 — 블럭토커는 AI 블럭친구 (제품 정의)</span>
+      <span><b style="color:#3B3F45">S4</b> 경험 증명 — 실제 대화 장면 감성적 증명 (Aha Moment)</span>
+      <span><b style="color:#3B3F45">S5</b> 다양성 증명 — 매일 다른 친구, 매일 다른 대화 (11개 캐릭터)</span>
+      <span><b style="color:#3B3F45">S6</b> 주도권 설득 — 아이가 직접 고른다 (능동적 참여)</span>
+      <span><b style="color:#3B3F45">S7</b> 불안 제거 — 3중 안전 필터 (구매 직전 안심)</span>
+      <span><b style="color:#3B3F45">S8</b> 구매 전환 — 가격 + CTA</span>
+      <span><b style="color:#3B3F45">S9</b> 신뢰 보강 — 기관 파트너 마퀴 (구매 후 의심 해소)</span>
+      <span><b style="color:#3B3F45">S10</b> 사회적 증거 — 부모 후기 (동조 효과)</span>
+      <span><b style="color:#3B3F45">S11</b> 최종 전환 — 마지막 CTA</span>
+    </div>
+
+    <div style="border-top:1px solid #e8e3db;padding-top:16px;">
+      <div style="font-size:11px;font-weight:bold;letter-spacing:0.1em;color:#3B3F45;margin-bottom:10px;text-transform:uppercase;">범례 / Legend</div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:10px;color:#888;letter-spacing:0.06em;">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#E07A5F;border-radius:2px;display:inline-block"></span> 메시지 교체 섹션</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#5E6F55;border-radius:2px;display:inline-block"></span> 신규 추가 섹션</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#aaa;border-radius:2px;display:inline-block"></span> 위치 이동 섹션</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:#3B3F45;border-radius:2px;display:inline-block"></span> 유지 섹션</span>
+        <span>✦ CTA 포함: S1 · S8 · S11</span>
+        <span>⚠️ 플레이스홀더: S5 캐릭터 이미지 · S6 앱 화면 · S10 후기</span>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 </body>
 </html>
